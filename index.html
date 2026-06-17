@@ -1,0 +1,2336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>7 Wonders Card Library</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SVG ICON SPRITE — custom geometric stand-ins.                -->
+<!-- ============================================================ -->
+<svg aria-hidden="true" focusable="false"
+     style="width:0;height:0;position:absolute;overflow:hidden">
+<defs>
+  <symbol id="icon-wood" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#5A8A2A"/>
+    <rect x="3" y="12" width="26" height="11" rx="2" fill="#4A2E10" stroke="#2a1808" stroke-width="0.8"/>
+    <ellipse cx="6.5" cy="17.5" rx="2.2" ry="4.2" fill="#C49040" stroke="#4A2E10" stroke-width="0.6"/>
+    <ellipse cx="6.5" cy="17.5" rx="0.8" ry="2.4" fill="#4A2E10"/>
+    <path d="M11 14.5 Q18 14.5 26 17.5 Q18 20.5 11 20.5" fill="none" stroke="#C49040" stroke-width="0.5" opacity="0.5"/>
+  </symbol>
+  <symbol id="icon-stone" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#888888"/>
+    <path d="M6 13 L13 6 L24 8 L26 19 L20 25 L8 22 Z" fill="#A8A8A8" stroke="#444444" stroke-width="1"/>
+    <path d="M13 6 L18 14 L26 19 L24 8 Z" fill="#C8C8C8"/>
+    <path d="M6 13 L18 14 L20 25 L8 22 Z" fill="#444444" opacity="0.4"/>
+  </symbol>
+  <symbol id="icon-clay" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#CC2200"/>
+    <rect x="4" y="10" width="24" height="12" rx="1" fill="#DD4422" stroke="#881100" stroke-width="1"/>
+    <line x1="4" y1="16" x2="28" y2="16" stroke="#EEBBAA" stroke-width="0.9"/>
+    <line x1="13" y1="10" x2="13" y2="16" stroke="#EEBBAA" stroke-width="0.9"/>
+    <line x1="20" y1="16" x2="20" y2="22" stroke="#EEBBAA" stroke-width="0.9"/>
+  </symbol>
+  <symbol id="icon-ore" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#A88458"/>
+    <!-- Jagged crystalline ore chunk — slightly lighter than before for better readability -->
+    <path d="M16 3 L25 10 L27 20 L20 28 L11 27 L5 15 L9 7 Z" fill="#2F1F12"/>
+    <!-- Subtle facet lines suggesting crystalline form -->
+    <line x1="16" y1="3" x2="20" y2="28" stroke="#5A4530" stroke-width="0.5" opacity="0.7"/>
+    <line x1="16" y1="3" x2="5"  y2="15" stroke="#5A4530" stroke-width="0.5" opacity="0.7"/>
+    <line x1="16" y1="3" x2="27" y2="20" stroke="#5A4530" stroke-width="0.5" opacity="0.7"/>
+    <line x1="16" y1="3" x2="11" y2="27" stroke="#5A4530" stroke-width="0.5" opacity="0.5"/>
+    <!-- Sparkle highlights -->
+    <circle cx="13" cy="11" r="1.3" fill="#E5D4B0" opacity="0.95"/>
+    <line x1="11" y1="11" x2="15" y2="11" stroke="#E5D4B0" stroke-width="0.6" opacity="0.75"/>
+    <line x1="13" y1="9"  x2="13" y2="13" stroke="#E5D4B0" stroke-width="0.6" opacity="0.75"/>
+    <circle cx="20" cy="20" r="0.8" fill="#E5D4B0" opacity="0.9"/>
+  </symbol>
+  <symbol id="icon-glass" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#1A6FA8"/>
+    <path d="M13 5 L19 5 L18 9 L21 13 L21 26 L11 26 L11 13 L14 9 Z" fill="#2FA0D0" stroke="#0A3058" stroke-width="1"/>
+    <ellipse cx="16" cy="16" rx="3" ry="6" fill="#8AD4F0" opacity="0.7"/>
+  </symbol>
+  <symbol id="icon-loom" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#BB2255"/>
+    <rect x="5" y="9" width="22" height="14" rx="1" fill="#FF88AA" stroke="#770022" stroke-width="1"/>
+    <line x1="9"  y1="9" x2="9"  y2="23" stroke="#770022" stroke-width="0.7"/>
+    <line x1="14" y1="9" x2="14" y2="23" stroke="#770022" stroke-width="0.7"/>
+    <line x1="19" y1="9" x2="19" y2="23" stroke="#770022" stroke-width="0.7"/>
+    <line x1="24" y1="9" x2="24" y2="23" stroke="#770022" stroke-width="0.7"/>
+    <line x1="5" y1="11" x2="27" y2="11" stroke="#FFCCD8" stroke-width="0.5" opacity="0.8"/>
+    <line x1="5" y1="16" x2="27" y2="16" stroke="#FFCCD8" stroke-width="0.5" opacity="0.6"/>
+    <line x1="5" y1="21" x2="27" y2="21" stroke="#FFCCD8" stroke-width="0.5" opacity="0.6"/>
+  </symbol>
+  <symbol id="icon-papyrus" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#D4A878"/>
+    <rect x="6" y="8" width="20" height="16" rx="2" fill="#F0DCB0" stroke="#5A3A18" stroke-width="1"/>
+    <line x1="9" y1="10.5" x2="22" y2="10.5" stroke="#A07840" stroke-width="0.6"/>
+    <line x1="9" y1="13" x2="22" y2="13" stroke="#5A3A18" stroke-width="0.8"/>
+    <line x1="9" y1="16" x2="22" y2="16" stroke="#5A3A18" stroke-width="0.8"/>
+    <line x1="9" y1="19" x2="22" y2="19" stroke="#5A3A18" stroke-width="0.8"/>
+    <line x1="9" y1="22" x2="17" y2="22" stroke="#5A3A18" stroke-width="0.8"/>
+  </symbol>
+  <symbol id="icon-coin" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="14" fill="#e6c43a" stroke="#5e4408" stroke-width="1.5"/>
+    <circle cx="16" cy="16" r="10" fill="none" stroke="#5e4408" stroke-width="0.6" opacity="0.5"/>
+  </symbol>
+  <symbol id="icon-vp" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#1f5a23"/>
+    <path d="M16 27 Q9 25 7 18 Q5 11 11 7" stroke="#9bce9d" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="8"  cy="13" rx="1.7" ry="3" fill="#88c688" transform="rotate(-30 8 13)"/>
+    <ellipse cx="8"  cy="18" rx="1.7" ry="3" fill="#88c688" transform="rotate(-15 8 18)"/>
+    <ellipse cx="11" cy="23" rx="1.7" ry="3" fill="#88c688" transform="rotate(10 11 23)"/>
+    <path d="M16 27 Q23 25 25 18 Q27 11 21 7" stroke="#9bce9d" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <ellipse cx="24" cy="13" rx="1.7" ry="3" fill="#88c688" transform="rotate(30 24 13)"/>
+    <ellipse cx="24" cy="18" rx="1.7" ry="3" fill="#88c688" transform="rotate(15 24 18)"/>
+    <ellipse cx="21" cy="23" rx="1.7" ry="3" fill="#88c688" transform="rotate(-10 21 23)"/>
+  </symbol>
+  <symbol id="icon-compass" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#a8542a"/>
+    <!-- Top handle/cap, pulled inside the disc -->
+    <rect x="14.5" y="4.5" width="3" height="2.5" rx="0.5" fill="#c89164" stroke="#2a1808" stroke-width="0.5"/>
+    <!-- Pivot/hinge circle -->
+    <circle cx="16" cy="8.5" r="2.2" fill="#e0b582" stroke="#2a1808" stroke-width="0.7"/>
+    <!-- Left leg (needle) -->
+    <line x1="16" y1="8.5" x2="9" y2="23" stroke="#c89164" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- Sharp needle tip at the left foot -->
+    <polygon points="9,23 7.2,25.6 11,25.4" fill="#2a1808"/>
+    <!-- Right leg (pencil arm) -->
+    <line x1="16" y1="8.5" x2="23" y2="23" stroke="#c89164" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- Angled pencil holder at the right foot -->
+    <rect x="21.8" y="22.4" width="2.6" height="3.6" rx="0.4" fill="#5e2812" stroke="#2a1808" stroke-width="0.4" transform="rotate(20 23.1 24.2)"/>
+    <!-- Adjustment arc connecting the two legs -->
+    <path d="M11 18 Q16 15.5 21 18" stroke="#5a3f15" stroke-width="0.8" fill="none" opacity="0.75"/>
+  </symbol>
+  <symbol id="icon-gear" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#a8542a"/>
+    <polygon points="16,4 19,8 24,7 23,12 28,14 24,17 26,22 21,22 19,27 16,24 13,27 11,22 6,22 8,17 4,14 9,12 8,7 13,8"
+             fill="#c89164" stroke="#2a1808" stroke-width="0.7"/>
+    <circle cx="16" cy="16" r="3.5" fill="#e0b582" stroke="#2a1808" stroke-width="0.7"/>
+  </symbol>
+  <symbol id="icon-tablet" viewBox="0 0 32 32">
+    <circle cx="16" cy="16" r="15.5" fill="#a8542a"/>
+    <rect x="7" y="6" width="18" height="20" rx="1.5" fill="#c89164" stroke="#2a1808" stroke-width="1"/>
+    <line x1="10" y1="10" x2="22" y2="10" stroke="#5a3f15" stroke-width="0.7"/>
+    <line x1="10" y1="13" x2="22" y2="13" stroke="#5a3f15" stroke-width="0.7"/>
+    <line x1="10" y1="16" x2="22" y2="16" stroke="#5a3f15" stroke-width="0.7"/>
+    <line x1="10" y1="19" x2="22" y2="19" stroke="#5a3f15" stroke-width="0.7"/>
+    <line x1="10" y1="22" x2="18" y2="22" stroke="#5a3f15" stroke-width="0.7"/>
+  </symbol>
+  <symbol id="icon-shield" viewBox="0 0 32 32">
+    <path d="M16 3 L28 7 L27 18 Q26 26 16 31 Q6 26 5 18 L4 7 Z" fill="#c0392b" stroke="#5e1410" stroke-width="1.5"/>
+  </symbol>
+
+  <!-- ===== Helpers for composite yellow / guild icons ===== -->
+
+  <!-- Gold arrows (no disc) -->
+  <symbol id="icon-arrow-r" viewBox="0 0 16 16">
+    <path d="M1 5 L1 11 L7 11 L7 14 L15 8 L7 2 L7 5 Z"
+          fill="#f5d76a" stroke="#3a2a04" stroke-width="1" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-arrow-l" viewBox="0 0 16 16">
+    <path d="M15 5 L15 11 L9 11 L9 14 L1 8 L9 2 L9 5 Z"
+          fill="#f5d76a" stroke="#3a2a04" stroke-width="1" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-arrow-d" viewBox="0 0 16 16">
+    <path d="M5 1 L11 1 L11 9 L14 9 L8 15 L2 9 L5 9 Z"
+          fill="#f5d76a" stroke="#3a2a04" stroke-width="1" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Small "card back" rectangles (count-by-color markers) -->
+  <symbol id="icon-card-brown"  viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#8a5a2a" stroke="#2a1808" stroke-width="1.6"/></symbol>
+  <symbol id="icon-card-grey"   viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#7d8084" stroke="#1a1c1e" stroke-width="1.6"/></symbol>
+  <symbol id="icon-card-blue"   viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#3a6fb0" stroke="#0a1f3a" stroke-width="1.6"/></symbol>
+  <symbol id="icon-card-red"    viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#c0392b" stroke="#3a0e0a" stroke-width="1.6"/></symbol>
+  <symbol id="icon-card-yellow" viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#e6c43a" stroke="#5e4408" stroke-width="1.6"/></symbol>
+  <symbol id="icon-card-green"  viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#3a6f2f" stroke="#0c1f08" stroke-width="1.6"/></symbol>
+  <symbol id="icon-card-purple" viewBox="0 0 24 32"><rect x="3" y="3" width="18" height="26" rx="2" fill="#7a4eb0" stroke="#1a0a26" stroke-width="1.6"/></symbol>
+
+  <!-- Pyramid — solid (Decorators Guild: complete Wonder, no remaining stages) -->
+  <symbol id="icon-pyramid" viewBox="0 0 32 32">
+    <path d="M2 28 L16 3 L30 28 Z" fill="#d4b16e" stroke="#5a3a1a" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M16 3 L2 28 L16 28 Z" fill="#b08850" opacity="0.5"/>
+  </symbol>
+
+  <!-- Pyramid — stepped (Arena, Builders Guild: per-stage scoring) -->
+  <symbol id="icon-pyramid-stages" viewBox="0 0 32 32">
+    <path d="M2 28 L16 3 L30 28 Z" fill="#d4b16e" stroke="#5a3a1a" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M16 3 L2 28 L16 28 Z" fill="#b08850" opacity="0.28"/>
+    <line x1="6.5" y1="20" x2="25.5" y2="20" stroke="#3a2410" stroke-width="2" stroke-linecap="round"/>
+    <line x1="11"  y1="12" x2="21"   y2="12" stroke="#3a2410" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- ===== Composite YELLOW-CARD icons (wide). All viewBox 100x32 so a single
+       CSS rule (.icon-wide) sizes them consistently. ===== -->
+
+  <!-- Age I — East Trading Post: coin(1) | wood stone clay ore | ▶ -->
+  <symbol id="icon-y-east-trading-post" viewBox="0 0 100 32">
+    <use href="#icon-coin"  x="1"  y="4" width="22" height="22"/>
+    <text x="12" y="20" font-family="Cinzel, serif" font-size="12" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">1</text>
+    <use href="#icon-wood"  x="24" y="7" width="18" height="18"/>
+    <use href="#icon-stone" x="42" y="7" width="18" height="18"/>
+    <use href="#icon-clay"  x="60" y="7" width="18" height="18"/>
+    <use href="#icon-ore"   x="78" y="7" width="18" height="18"/>
+    <use href="#icon-arrow-r" x="86" y="10" width="14" height="14"/>
+  </symbol>
+
+  <!-- Age I — West Trading Post: ◀ | wood stone clay ore | coin(1) -->
+  <symbol id="icon-y-west-trading-post" viewBox="0 0 100 32">
+    <use href="#icon-arrow-l" x="0" y="10" width="14" height="14"/>
+    <use href="#icon-wood"  x="4"  y="7" width="18" height="18"/>
+    <use href="#icon-stone" x="22" y="7" width="18" height="18"/>
+    <use href="#icon-clay"  x="40" y="7" width="18" height="18"/>
+    <use href="#icon-ore"   x="58" y="7" width="18" height="18"/>
+    <use href="#icon-coin"  x="77" y="4" width="22" height="22"/>
+    <text x="88" y="20" font-family="Cinzel, serif" font-size="12" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">1</text>
+  </symbol>
+
+  <!-- Age I — Marketplace: ◀ | coin(1) glass loom papyrus | ▶ -->
+  <symbol id="icon-y-marketplace" viewBox="0 0 100 32">
+    <use href="#icon-arrow-l" x="0" y="10" width="14" height="14"/>
+    <use href="#icon-coin"    x="11" y="4" width="22" height="22"/>
+    <text x="22" y="20" font-family="Cinzel, serif" font-size="12" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">1</text>
+    <use href="#icon-glass"   x="34" y="7" width="18" height="18"/>
+    <use href="#icon-loom"    x="52" y="7" width="18" height="18"/>
+    <use href="#icon-papyrus" x="70" y="7" width="18" height="18"/>
+    <use href="#icon-arrow-r" x="86" y="10" width="14" height="14"/>
+  </symbol>
+
+  <!-- ===== STACK-style composite icons. viewBox 60x48, used with .icon-stack
+       CSS class. Card backgrounds drawn inline as <rect> so each rect fills its
+       slot exactly without aspect-ratio compromise. Coin & VP overlap the card's
+       bottom so the composite reads as a single larger badge. ===== -->
+
+  <!-- viewBox 60x60 (square) for every stack icon. Layout:
+         arrows         x = 0..12 / 48..60 (2-unit gap to central card at x=14..46)
+         central icon   x = 14..46, y = 2..46
+         coin / VP      y = 24..48 (overlap card's bottom)
+         ▼ (your city)  x = 24..36, y = 48..60 (entirely below card, like ◀▶) -->
+
+  <!-- ----- Pattern B — Vineyard / Bazaar (your+neighbors): ◀ card ▶ + coin + ▼ ----- -->
+
+  <symbol id="icon-y-vineyard" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#8a5a2a" stroke="#2a1808" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-coin"    x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">1</text>
+    <use href="#icon-arrow-d" x="24" y="48" width="12" height="12"/>
+  </symbol>
+
+  <symbol id="icon-y-bazaar" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#7d8084" stroke="#1a1c1e" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-coin"    x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">2</text>
+    <use href="#icon-arrow-d" x="24" y="48" width="12" height="12"/>
+  </symbol>
+
+  <!-- ----- Pattern A — Age III yellow (your city only): card / pyramid + coin & VP overlay ----- -->
+
+  <symbol id="icon-y-arena" viewBox="0 0 60 60">
+    <use href="#icon-pyramid-stages" x="8" y="2" width="44" height="44"/>
+    <use href="#icon-coin"    x="2"  y="24" width="24" height="24"/>
+    <text x="14" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">3</text>
+    <use href="#icon-vp"      x="34" y="24" width="24" height="24"/>
+    <text x="46" y="41" font-family="Cinzel, serif" font-size="12" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-y-haven" viewBox="0 0 60 60">
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#8a5a2a" stroke="#2a1808" stroke-width="1.8"/>
+    <use href="#icon-coin"    x="2"  y="24" width="24" height="24"/>
+    <text x="14" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">1</text>
+    <use href="#icon-vp"      x="34" y="24" width="24" height="24"/>
+    <text x="46" y="41" font-family="Cinzel, serif" font-size="12" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-y-lighthouse" viewBox="0 0 60 60">
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#e6c43a" stroke="#5e4408" stroke-width="1.8"/>
+    <use href="#icon-coin"    x="2"  y="24" width="24" height="24"/>
+    <text x="14" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">1</text>
+    <use href="#icon-vp"      x="34" y="24" width="24" height="24"/>
+    <text x="46" y="41" font-family="Cinzel, serif" font-size="12" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-y-chamber-of-commerce" viewBox="0 0 60 60">
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#7d8084" stroke="#1a1c1e" stroke-width="1.8"/>
+    <use href="#icon-coin"    x="2"  y="24" width="24" height="24"/>
+    <text x="14" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">2</text>
+    <use href="#icon-vp"      x="34" y="24" width="24" height="24"/>
+    <text x="46" y="41" font-family="Cinzel, serif" font-size="12" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">2</text>
+  </symbol>
+
+  <symbol id="icon-y-ludus" viewBox="0 0 60 60">
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#c0392b" stroke="#3a0e0a" stroke-width="1.8"/>
+    <use href="#icon-coin"    x="2"  y="24" width="24" height="24"/>
+    <text x="14" y="41" font-family="Cinzel, serif" font-size="14" font-weight="800"
+          text-anchor="middle" fill="#3a2a04">3</text>
+    <use href="#icon-vp"      x="34" y="24" width="24" height="24"/>
+    <text x="46" y="41" font-family="Cinzel, serif" font-size="12" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <!-- ----- Guild pattern — ◀ card ▶ + VP overlay (per X card in both neighbors). Builders adds ▼ for own city ----- -->
+
+  <symbol id="icon-g-builders" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l"        x="0"  y="14" width="12" height="12"/>
+    <use href="#icon-pyramid-stages" x="14" y="2"  width="32" height="44"/>
+    <use href="#icon-arrow-r"        x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"             x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+    <use href="#icon-arrow-d"        x="24" y="48" width="12" height="12"/>
+  </symbol>
+
+  <symbol id="icon-g-craftsmens" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#7d8084" stroke="#1a1c1e" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"      x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">2</text>
+  </symbol>
+
+  <symbol id="icon-g-decorators" viewBox="0 0 60 60">
+    <use href="#icon-pyramid" x="4" y="2" width="52" height="48"/>
+    <use href="#icon-vp"      x="18" y="26" width="24" height="24"/>
+    <text x="30" y="43" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">7</text>
+  </symbol>
+
+  <symbol id="icon-g-magistrates" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#3a6fb0" stroke="#0a1f3a" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"      x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-g-philosophers" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#3a6f2f" stroke="#0c1f08" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"      x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-g-spies" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#c0392b" stroke="#3a0e0a" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"      x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-g-traders" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#e6c43a" stroke="#5e4408" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"      x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <symbol id="icon-g-workers" viewBox="0 0 60 60">
+    <use href="#icon-arrow-l" x="0" y="14" width="12" height="12"/>
+    <rect x="14" y="2" width="32" height="44" rx="2.5" fill="#8a5a2a" stroke="#2a1808" stroke-width="1.8"/>
+    <use href="#icon-arrow-r" x="48" y="14" width="12" height="12"/>
+    <use href="#icon-vp"      x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+  <!-- Shipowners: 3 cards at proper aspect (≈3:4) side-by-side, VP overlapping bottoms -->
+  <symbol id="icon-g-shipowners" viewBox="0 0 60 60">
+    <rect x="2"  y="4" width="18" height="24" rx="2" fill="#8a5a2a" stroke="#2a1808" stroke-width="1.6"/>
+    <rect x="22" y="4" width="18" height="24" rx="2" fill="#7d8084" stroke="#1a1c1e" stroke-width="1.6"/>
+    <rect x="42" y="4" width="18" height="24" rx="2" fill="#7a4eb0" stroke="#1a0a26" stroke-width="1.6"/>
+    <use href="#icon-vp" x="18" y="24" width="24" height="24"/>
+    <text x="30" y="41" font-family="Cinzel, serif" font-size="14" font-weight="700"
+          text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">1</text>
+  </symbol>
+
+</defs>
+</svg>
+
+
+<!-- ============================================================ -->
+<!-- STATE INPUTS                                                 -->
+<!-- ============================================================ -->
+<input type="radio" name="players" id="p3" class="state">
+<input type="radio" name="players" id="p4" class="state">
+<input type="radio" name="players" id="p5" class="state">
+<input type="radio" name="players" id="p6" class="state">
+<input type="radio" name="players" id="p7" class="state">
+
+<input type="radio" name="age" id="a1" class="state" checked>
+<input type="radio" name="age" id="a2" class="state">
+<input type="radio" name="age" id="a3" class="state">
+
+<input type="checkbox" id="view-chain" class="state">
+
+<input type="radio" name="color" id="c-all"    class="state" checked>
+<input type="radio" name="color" id="c-brown"  class="state">
+<input type="radio" name="color" id="c-grey"   class="state">
+<input type="radio" name="color" id="c-blue"   class="state">
+<input type="radio" name="color" id="c-red"    class="state">
+<input type="radio" name="color" id="c-yellow" class="state">
+<input type="radio" name="color" id="c-green"  class="state">
+<input type="radio" name="color" id="c-purple" class="state">
+
+<input type="checkbox" id="color-menu-toggle" class="state">
+
+
+<!-- ============================================================ -->
+<!-- SCREEN 1 — PLAYER SELECT                                     -->
+<!-- ============================================================ -->
+<section class="player-select">
+  <h1>7 Wonders</h1>
+  <p class="subtitle">Choose player count</p>
+  <div class="player-tiles">
+    <label for="p3" class="player-tile">III</label>
+    <label for="p4" class="player-tile">IV</label>
+    <label for="p5" class="player-tile">V</label>
+    <label for="p6" class="player-tile">VI</label>
+    <label for="p7" class="player-tile">VII</label>
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SCREEN 2 — MAIN VIEW                                         -->
+<!-- ============================================================ -->
+<main class="main-view">
+
+  <header class="top-bar">
+    <div class="age-cycler">
+      <label for="a2" class="age-label age-label-1">Age I</label>
+      <label for="a3" class="age-label age-label-2">Age II</label>
+      <label for="a1" class="age-label age-label-3">Age III</label>
+    </div>
+    <label for="view-chain" class="view-toggle">
+      <span class="when-cards">Chains &rarr;</span>
+      <span class="when-chains">&larr; Cards</span>
+    </label>
+    <label for="color-menu-toggle" class="color-button" aria-label="Filter by color">
+      <span class="color-button-swatch"></span>
+    </label>
+  </header>
+
+  <label for="color-menu-toggle" class="color-menu-backdrop" aria-hidden="true"></label>
+  <div class="color-menu" role="menu">
+    <label for="c-all"    class="color-chip chip-all"    aria-label="All colors"></label>
+    <label for="c-brown"  class="color-chip chip-brown"
+           data-a1-p3="6"  data-a1-p4="8"  data-a1-p5="12" data-a1-p6="14" data-a1-p7="14"
+           data-a2-p3="4"  data-a2-p4="8"  data-a2-p5="8"  data-a2-p6="8"  data-a2-p7="8"
+           data-a3-p3="0"  data-a3-p4="0"  data-a3-p5="0"  data-a3-p6="0"  data-a3-p7="0"></label>
+    <label for="c-grey"   class="color-chip chip-grey"
+           data-a1-p3="3"  data-a1-p4="3"  data-a1-p5="3"  data-a1-p6="6"  data-a1-p7="6"
+           data-a2-p3="3"  data-a2-p4="3"  data-a2-p5="6"  data-a2-p6="6"  data-a2-p7="6"
+           data-a3-p3="0"  data-a3-p4="0"  data-a3-p5="0"  data-a3-p6="0"  data-a3-p7="0"></label>
+    <label for="c-blue"   class="color-chip chip-blue"
+           data-a1-p3="3"  data-a1-p4="4"  data-a1-p5="5"  data-a1-p6="6"  data-a1-p7="8"
+           data-a2-p3="4"  data-a2-p4="4"  data-a2-p5="5"  data-a2-p6="6"  data-a2-p7="8"
+           data-a3-p3="5"  data-a3-p4="6"  data-a3-p5="7"  data-a3-p6="9"  data-a3-p7="10"></label>
+    <label for="c-red"    class="color-chip chip-red"
+           data-a1-p3="3"  data-a1-p4="4"  data-a1-p5="5"  data-a1-p6="5"  data-a1-p7="6"
+           data-a2-p3="3"  data-a2-p4="4"  data-a2-p5="5"  data-a2-p6="7"  data-a2-p7="9"
+           data-a3-p3="3"  data-a3-p4="5"  data-a3-p5="7"  data-a3-p6="8"  data-a3-p7="10"></label>
+    <label for="c-yellow" class="color-chip chip-yellow"
+           data-a1-p3="3"  data-a1-p4="4"  data-a1-p5="5"  data-a1-p6="6"  data-a1-p7="9"
+           data-a2-p3="3"  data-a2-p4="4"  data-a2-p5="5"  data-a2-p6="8"  data-a2-p7="10"
+           data-a3-p3="3"  data-a3-p4="5"  data-a3-p5="7"  data-a3-p6="9"  data-a3-p7="10"></label>
+    <label for="c-green"  class="color-chip chip-green"
+           data-a1-p3="3"  data-a1-p4="4"  data-a1-p5="5"  data-a1-p6="5"  data-a1-p7="6"
+           data-a2-p3="4"  data-a2-p4="5"  data-a2-p5="6"  data-a2-p6="7"  data-a2-p7="8"
+           data-a3-p3="5"  data-a3-p4="6"  data-a3-p5="7"  data-a3-p6="8"  data-a3-p7="10"></label>
+    <label for="c-purple" class="color-chip chip-purple" aria-label="Purple (guilds)"></label>
+  </div>
+
+
+  <!-- ============================================================ -->
+  <!-- CARD GRID — 80 base-game cards                               -->
+  <!-- ============================================================ -->
+  <section class="card-grid">
+
+    <!-- ========== AGE I — BROWN (raw materials) ========== -->
+
+    <a href="#card-lumber-yard" class="card card-brown" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Lumber Yard</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg></div>
+    </a>
+
+    <a href="#card-stone-pit" class="card card-brown" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Stone Pit</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg></div>
+    </a>
+
+    <a href="#card-clay-pool" class="card card-brown" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Clay Pool</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg></div>
+    </a>
+
+    <a href="#card-ore-vein" class="card card-brown" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Ore Vein</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg></div>
+    </a>
+
+    <a href="#card-clay-pit" class="card card-brown" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Clay Pit</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-timber-yard" class="card card-brown" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Timber Yard</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-excavation" class="card card-brown" data-age="1" data-players="4 5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Excavation</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-forest-cave" class="card card-brown" data-age="1" data-players="5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Forest Cave</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-tree-farm" class="card card-brown" data-age="1" data-players="6 7">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="0" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Tree Farm</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-mine" class="card card-brown" data-age="1" data-players="6 7">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="0" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Mine</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE I — GREY (manufactured goods) ========== -->
+
+    <a href="#card-glassworks-1" class="card card-grey" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Glassworks</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg></div>
+    </a>
+
+    <a href="#card-loom-1" class="card card-grey" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Loom</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg></div>
+    </a>
+
+    <a href="#card-press-1" class="card card-grey" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Press</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg></div>
+    </a>
+
+    <!-- ========== AGE I — BLUE (civic) ========== -->
+
+    <a href="#card-altar" class="card card-blue has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 4">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Altar</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-baths" class="card card-blue has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 1">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Baths</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-theater" class="card card-blue has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 3">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Theater</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-well" class="card card-blue has-chains" data-age="1" data-players="4 5 6 7" style="--chain-row: 2">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Well</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE I — YELLOW (commercial) ========== -->
+
+    <a href="#card-east-trading-post" class="card card-yellow has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 5">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">East Trading Post</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-wide" viewBox="0 0 100 32"><use href="#icon-y-east-trading-post"/></svg></div>
+    </a>
+
+    <a href="#card-west-trading-post" class="card card-yellow has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 6">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">West Trading Post</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-wide" viewBox="0 0 100 32"><use href="#icon-y-west-trading-post"/></svg></div>
+    </a>
+
+    <a href="#card-marketplace" class="card card-yellow has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Marketplace</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-wide" viewBox="0 0 100 32"><use href="#icon-y-marketplace"/></svg></div>
+    </a>
+
+    <a href="#card-tavern" class="card card-yellow" data-age="1" data-players="4 5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="2" data-c6="2" data-c7="3"></span>
+      <span class="card-name">Tavern</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">5</text></svg></div>
+    </a>
+
+    <!-- ========== AGE I — RED (military) ========== -->
+
+    <a href="#card-barracks" class="card card-red" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Barracks</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-guard-tower" class="card card-red" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Guard Tower</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-stockade" class="card card-red" data-age="1" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Stockade</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE I — GREEN (science) ========== -->
+
+    <a href="#card-apothecary" class="card card-green has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 8">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Apothecary</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </a>
+
+    <a href="#card-scriptorium" class="card card-green has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 14">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Scriptorium</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </a>
+
+    <a href="#card-workshop" class="card card-green has-chains" data-age="1" data-players="3 4 5 6 7" style="--chain-row: 11">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Workshop</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </a>
+
+    <!-- ========== AGE II — BROWN ========== -->
+
+    <a href="#card-brickyard" class="card card-brown" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Brickyard</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg></div>
+    </a>
+
+    <a href="#card-foundry" class="card card-brown" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Foundry</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg></div>
+    </a>
+
+    <a href="#card-quarry" class="card card-brown" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Quarry</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg></div>
+    </a>
+
+    <a href="#card-sawmill" class="card card-brown" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Sawmill</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg></div>
+    </a>
+
+    <!-- ========== AGE II — GREY ========== -->
+
+    <a href="#card-glassworks-2" class="card card-grey" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Glassworks</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg></div>
+    </a>
+
+    <a href="#card-loom-2" class="card card-grey" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Loom</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg></div>
+    </a>
+
+    <a href="#card-press-2" class="card card-grey" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Press</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg></div>
+    </a>
+
+    <!-- ========== AGE II — BLUE ========== -->
+
+    <a href="#card-aqueduct" class="card card-blue has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 1">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Aqueduct</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">5</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-courthouse" class="card card-blue has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 14">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Courthouse</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">4</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-statue" class="card card-blue has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 2">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Statue</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">4</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-temple" class="card card-blue" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Temple</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">4</text></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE II — YELLOW ========== -->
+
+    <a href="#card-bazaar" class="card card-yellow" data-age="2" data-players="4 5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Bazaar</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-bazaar"/></svg></div>
+    </a>
+
+    <a href="#card-caravansery" class="card card-yellow has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="3" data-c7="3"></span>
+      <span class="card-name">Caravansery</span>
+      <div class="card-icons" data-icons="4">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-forum" class="card card-yellow has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 5">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="3"></span>
+      <span class="card-name">Forum</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-vineyard" class="card card-yellow" data-age="2" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Vineyard</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-vineyard"/></svg></div>
+    </a>
+
+    <!-- ========== AGE II — RED ========== -->
+
+    <a href="#card-archery-range" class="card card-red has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 11">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Archery Range</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-stables" class="card card-red has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 8">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Stables</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-training-ground" class="card card-red has-chains" data-age="2" data-players="4 5 6 7" style="--chain-row: 17">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="2" data-c7="3"></span>
+      <span class="card-name">Training Ground</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-walls" class="card card-red has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 18">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Walls</span>
+      <div class="card-icons" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE II — GREEN ========== -->
+
+    <a href="#card-dispensary" class="card card-green has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 9">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Dispensary</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </a>
+
+    <a href="#card-laboratory" class="card card-green has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 12">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Laboratory</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </a>
+
+    <a href="#card-library" class="card card-green has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 15">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Library</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </a>
+
+    <a href="#card-school" class="card card-green has-chains" data-age="2" data-players="3 4 5 6 7" style="--chain-row: 19">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">School</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </a>
+
+    <!-- ========== AGE III — BLUE ========== -->
+
+    <a href="#card-gardens" class="card card-blue has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 3">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Gardens</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">5</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-palace" class="card card-blue" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Palace</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">8</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-pantheon" class="card card-blue has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 4">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Pantheon</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">7</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-senate" class="card card-blue has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 15">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Senate</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">6</text></svg>
+      </div>
+    </a>
+
+    <a href="#card-town-hall" class="card card-blue" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Town Hall</span>
+      <div class="card-icons" data-icons="1">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">7</text></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE III — YELLOW (icons TBD) ========== -->
+
+    <a href="#card-arena" class="card card-yellow has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 9">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Arena</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-arena"/></svg></div>
+    </a>
+
+    <a href="#card-chamber-of-commerce" class="card card-yellow" data-age="3" data-players="4 5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Chamber of Commerce</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-chamber-of-commerce"/></svg></div>
+    </a>
+
+    <a href="#card-haven" class="card card-yellow has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 5">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Haven</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-haven"/></svg></div>
+    </a>
+
+    <a href="#card-lighthouse" class="card card-yellow has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Lighthouse</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-lighthouse"/></svg></div>
+    </a>
+
+    <a href="#card-ludus" class="card card-yellow" data-age="3" data-players="5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Ludus</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-ludus"/></svg></div>
+    </a>
+
+    <!-- ========== AGE III — RED ========== -->
+
+    <a href="#card-arsenal" class="card card-red" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Arsenal</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-castrum" class="card card-red" data-age="3" data-players="4 5 6 7">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Castrum</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-circus" class="card card-red has-chains" data-age="3" data-players="4 5 6 7" style="--chain-row: 17">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Circus</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-fortifications" class="card card-red has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 18">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Fortifications</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-siege-workshop" class="card card-red has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 13">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Siege Workshop</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg>
+      </div>
+    </a>
+
+    <!-- ========== AGE III — GREEN ========== -->
+
+    <a href="#card-academy" class="card card-green has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 19">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Academy</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </a>
+
+    <a href="#card-lodge" class="card card-green has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 10">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Lodge</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </a>
+
+    <a href="#card-observatory" class="card card-green has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 12">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <span class="card-name">Observatory</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </a>
+
+    <a href="#card-study" class="card card-green has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 20">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">Study</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </a>
+
+    <a href="#card-university" class="card card-green has-chains" data-age="3" data-players="3 4 5 6 7" style="--chain-row: 16">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <span class="card-name">University</span>
+      <div class="card-icons" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </a>
+
+    <!-- ========== AGE III — PURPLE (Guilds, always displayed) ========== -->
+
+    <a href="#card-builders-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Builders Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-builders"/></svg></div>
+    </a>
+
+    <a href="#card-craftsmens-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Craftsmens Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-craftsmens"/></svg></div>
+    </a>
+
+    <a href="#card-decorators-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Decorators Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-decorators"/></svg></div>
+    </a>
+
+    <a href="#card-magistrates-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Magistrates Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-magistrates"/></svg></div>
+    </a>
+
+    <a href="#card-philosophers-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Philosophers Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-philosophers"/></svg></div>
+    </a>
+
+    <a href="#card-scientists-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Scientists Guild</span>
+      <div class="card-icons" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg>
+      </div>
+    </a>
+
+    <a href="#card-shipowners-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Shipowners Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-shipowners"/></svg></div>
+    </a>
+
+    <a href="#card-spies-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Spies Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-spies"/></svg></div>
+    </a>
+
+    <a href="#card-traders-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Traders Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-traders"/></svg></div>
+    </a>
+
+    <a href="#card-workers-guild" class="card card-purple" data-age="3" data-players="3 4 5 6 7">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <span class="card-name">Workers Guild</span>
+      <div class="card-icons" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-workers"/></svg></div>
+    </a>
+
+
+    <!-- ============================================================ -->
+    <!-- CHAIN CONNECTORS                                             -->
+    <!-- ============================================================ -->
+
+    <!-- Single-row horizontal connectors -->
+    <div class="chain-connector h-line" style="grid-row: 1; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 2; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 5; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 5; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 7; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 7; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 8; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 9; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 11; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 12; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 14; grid-column: 1 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 15; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 17; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 18; grid-column: 2 / span 2;"></div>
+    <div class="chain-connector h-line" style="grid-row: 19; grid-column: 2 / span 2;"></div>
+
+    <!-- Skip-age horizontal connectors (span all 3 cols) -->
+    <div class="chain-connector h-line" style="grid-row: 3; grid-column: 1 / span 3;"></div>
+    <div class="chain-connector h-line" style="grid-row: 4; grid-column: 1 / span 3;"></div>
+
+    <!-- Down-right diagonal connectors (multi-target chains) -->
+    <svg class="chain-connector d-line" style="grid-row: 8 / span 2; grid-column: 1 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+    <svg class="chain-connector d-line" style="grid-row: 11 / span 2; grid-column: 1 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+    <svg class="chain-connector d-line" style="grid-row: 14 / span 2; grid-column: 1 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+    <svg class="chain-connector d-line" style="grid-row: 9 / span 2; grid-column: 2 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+    <svg class="chain-connector d-line" style="grid-row: 12 / span 2; grid-column: 2 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+    <svg class="chain-connector d-line" style="grid-row: 15 / span 2; grid-column: 2 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+    <svg class="chain-connector d-line" style="grid-row: 19 / span 2; grid-column: 2 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="25" x2="75" y2="75"/></svg>
+
+    <!-- Up-right diagonal (West Trading Post → Forum) -->
+    <svg class="chain-connector d-line-up" style="grid-row: 5 / span 2; grid-column: 1 / span 2;" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="25" y1="75" x2="75" y2="25"/></svg>
+
+  </section>
+
+
+  <!-- ============================================================ -->
+  <!-- CARD DETAIL MODALS                                           -->
+  <!-- ============================================================ -->
+
+  <!-- ===== AGE I — Brown ===== -->
+
+  <article id="card-lumber-yard" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Lumber Yard</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-stone-pit" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Stone Pit</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-clay-pool" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Clay Pool</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-ore-vein" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Ore Vein</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-clay-pit" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Clay Pit</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-timber-yard" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Timber Yard</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-excavation" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Excavation</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-forest-cave" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Forest Cave</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-tree-farm" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="0" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Tree Farm</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-mine" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="0" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Mine</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="2">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE I — Grey ===== -->
+
+  <article id="card-glassworks-1" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-grey">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Glassworks</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-loom-1" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-grey">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Loom</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-press-1" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-grey">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Press</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE I — Blue ===== -->
+
+  <article id="card-altar" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Altar</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-pantheon" class="card-blue">Pantheon</a></div>
+  </div></article>
+
+  <article id="card-baths" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Baths</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-aqueduct" class="card-blue">Aqueduct</a></div>
+  </div></article>
+
+  <article id="card-theater" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Theater</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-gardens" class="card-blue">Gardens</a></div>
+  </div></article>
+
+  <article id="card-well" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Well</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">3</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-statue" class="card-blue">Statue</a></div>
+  </div></article>
+
+  <!-- ===== AGE I — Yellow ===== -->
+
+  <article id="card-east-trading-post" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">East Trading Post</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-wide" viewBox="0 0 100 32"><use href="#icon-y-east-trading-post"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-forum" class="card-yellow">Forum</a></div>
+  </div></article>
+
+  <article id="card-west-trading-post" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">West Trading Post</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-wide" viewBox="0 0 100 32"><use href="#icon-y-west-trading-post"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-forum" class="card-yellow">Forum</a></div>
+  </div></article>
+
+  <article id="card-marketplace" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Marketplace</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-wide" viewBox="0 0 100 32"><use href="#icon-y-marketplace"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-caravansery" class="card-yellow">Caravansery</a></div>
+  </div></article>
+
+  <article id="card-tavern" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="2" data-c6="2" data-c7="3"></span>
+      <h2 class="card-title">Tavern</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">5</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE I — Red ===== -->
+
+  <article id="card-barracks" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Barracks</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-guard-tower" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Guard Tower</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-stockade" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Stockade</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE I — Green ===== -->
+
+  <article id="card-apothecary" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Apothecary</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-stables" class="card-red">Stables</a>
+      <a href="#card-dispensary" class="card-green">Dispensary</a>
+    </div>
+  </div></article>
+
+  <article id="card-scriptorium" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Scriptorium</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-courthouse" class="card-blue">Courthouse</a>
+      <a href="#card-library" class="card-green">Library</a>
+    </div>
+  </div></article>
+
+  <article id="card-workshop" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Workshop</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-archery-range" class="card-red">Archery Range</a>
+      <a href="#card-laboratory" class="card-green">Laboratory</a>
+    </div>
+  </div></article>
+
+  <!-- ===== AGE II — Brown ===== -->
+
+  <article id="card-brickyard" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Brickyard</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-foundry" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Foundry</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-quarry" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Quarry</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-sawmill" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-brown">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Sawmill</h2>
+      <div class="cost"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-coin"/><text x="16" y="21" font-family="Cinzel, serif" font-size="14" font-weight="700" text-anchor="middle" fill="#5e4408">1</text></svg></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE II — Grey ===== -->
+
+  <article id="card-glassworks-2" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-grey">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Glassworks</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-loom-2" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-grey">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Loom</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-press-2" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-grey">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Press</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE II — Blue ===== -->
+
+  <article id="card-aqueduct" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-baths" class="card-blue">Baths</a></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Aqueduct</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">5</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-courthouse" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-scriptorium" class="card-green">Scriptorium</a></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Courthouse</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">4</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-statue" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-well" class="card-blue">Well</a></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Statue</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">4</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-temple" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Temple</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">4</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE II — Yellow ===== -->
+
+  <article id="card-bazaar" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Bazaar</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-bazaar"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-caravansery" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-marketplace" class="card-yellow">Marketplace</a></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="3" data-c7="3"></span>
+      <h2 class="card-title">Caravansery</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+      </div>
+      <div class="main-icon" data-icons="4">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-lighthouse" class="card-yellow">Lighthouse</a></div>
+  </div></article>
+
+  <article id="card-forum" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from">
+      <a href="#card-east-trading-post" class="card-yellow">East Trading Post</a>
+      <a href="#card-west-trading-post" class="card-yellow">West Trading Post</a>
+    </div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="3"></span>
+      <h2 class="card-title">Forum</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-haven" class="card-yellow">Haven</a></div>
+  </div></article>
+
+  <article id="card-vineyard" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Vineyard</h2>
+      <div class="cost"></div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-vineyard"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE II — Red ===== -->
+
+  <article id="card-archery-range" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-workshop" class="card-green">Workshop</a></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Archery Range</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+      <div class="main-icon" data-icons="2"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-stables" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-apothecary" class="card-green">Apothecary</a></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Stables</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+      <div class="main-icon" data-icons="2"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-training-ground" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="2" data-c7="3"></span>
+      <h2 class="card-title">Training Ground</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+      </div>
+      <div class="main-icon" data-icons="2"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-circus" class="card-red">Circus</a></div>
+  </div></article>
+
+  <article id="card-walls" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Walls</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+      </div>
+      <div class="main-icon" data-icons="2"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"><a href="#card-fortifications" class="card-red">Fortifications</a></div>
+  </div></article>
+
+  <!-- ===== AGE II — Green ===== -->
+
+  <article id="card-dispensary" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-apothecary" class="card-green">Apothecary</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Dispensary</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-arena" class="card-yellow">Arena</a>
+      <a href="#card-lodge" class="card-green">Lodge</a>
+    </div>
+  </div></article>
+
+  <article id="card-laboratory" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-workshop" class="card-green">Workshop</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Laboratory</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-observatory" class="card-green">Observatory</a>
+      <a href="#card-siege-workshop" class="card-red">Siege Workshop</a>
+    </div>
+  </div></article>
+
+  <article id="card-library" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-scriptorium" class="card-green">Scriptorium</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Library</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-senate" class="card-blue">Senate</a>
+      <a href="#card-university" class="card-green">University</a>
+    </div>
+  </div></article>
+
+  <article id="card-school" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">School</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </div>
+    <div class="chain-side chain-to">
+      <a href="#card-academy" class="card-green">Academy</a>
+      <a href="#card-study" class="card-green">Study</a>
+    </div>
+  </div></article>
+
+  <!-- ===== AGE III — Blue ===== -->
+
+  <article id="card-gardens" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-theater" class="card-blue">Theater</a></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Gardens</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">5</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-palace" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Palace</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">8</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-pantheon" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-altar" class="card-blue">Altar</a></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Pantheon</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">7</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-senate" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-library" class="card-green">Library</a></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Senate</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">6</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-town-hall" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-blue">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Town Hall</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-vp"/><text x="16" y="20.5" font-family="Cinzel, serif" font-size="13" font-weight="700" text-anchor="middle" fill="#fff" stroke="#1f5a23" stroke-width="0.8" paint-order="stroke">7</text></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE III — Yellow ===== -->
+
+  <article id="card-arena" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-dispensary" class="card-green">Dispensary</a></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Arena</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-arena"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-chamber-of-commerce" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Chamber of Commerce</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-chamber-of-commerce"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-haven" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-forum" class="card-yellow">Forum</a></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Haven</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-haven"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-lighthouse" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-caravansery" class="card-yellow">Caravansery</a></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Lighthouse</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-lighthouse"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-ludus" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-yellow">
+      <span class="count-badge" data-c3="0" data-c4="0" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Ludus</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-y-ludus"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE III — Red ===== -->
+
+  <article id="card-arsenal" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Arsenal</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-castrum" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Castrum</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-circus" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-training-ground" class="card-red">Training Ground</a></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="0" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Circus</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-fortifications" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-walls" class="card-red">Walls</a></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Fortifications</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-siege-workshop" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-laboratory" class="card-green">Laboratory</a></div>
+    <div class="card-face card-red">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Siege Workshop</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg><svg class="icon" viewBox="0 0 32 32"><use href="#icon-shield"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE III — Green ===== -->
+
+  <article id="card-academy" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-school" class="card-green">School</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Academy</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-lodge" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-dispensary" class="card-green">Dispensary</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Lodge</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-observatory" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-laboratory" class="card-green">Laboratory</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="2"></span>
+      <h2 class="card-title">Observatory</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-study" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-school" class="card-green">School</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">Study</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-university" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"><a href="#card-library" class="card-green">Library</a></div>
+    <div class="card-face card-green">
+      <span class="count-badge" data-c3="1" data-c4="2" data-c5="2" data-c6="2" data-c7="2"></span>
+      <h2 class="card-title">University</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <!-- ===== AGE III — Purple (Guilds) ===== -->
+
+  <article id="card-builders-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Builders Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-builders"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-craftsmens-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Craftsmens Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-craftsmens"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-decorators-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Decorators Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-decorators"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-magistrates-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Magistrates Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-magistrates"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-philosophers-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Philosophers Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-philosophers"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-scientists-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Scientists Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="3">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-compass"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-tablet"/></svg>
+        <span class="icon-sep">/</span>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-gear"/></svg>
+      </div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-shipowners-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Shipowners Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-shipowners"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-spies-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Spies Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-spies"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-traders-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Traders Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-glass"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-papyrus"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-loom"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-traders"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <article id="card-workers-guild" class="card-detail"><div class="detail-row">
+    <div class="chain-side chain-from"></div>
+    <div class="card-face card-purple">
+      <span class="count-badge" data-c3="1" data-c4="1" data-c5="1" data-c6="1" data-c7="1"></span>
+      <h2 class="card-title">Workers Guild</h2>
+      <div class="cost">
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-ore"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-wood"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-stone"/></svg>
+        <svg class="icon" viewBox="0 0 32 32"><use href="#icon-clay"/></svg>
+      </div>
+      <div class="main-icon" data-icons="1"><svg class="icon icon-stack" viewBox="0 0 60 60"><use href="#icon-g-workers"/></svg></div>
+    </div>
+    <div class="chain-side chain-to"></div>
+  </div></article>
+
+  <a href="#" class="modal-backdrop" aria-hidden="true" tabindex="-1"></a>
+
+</main>
+
+</body>
+</html>

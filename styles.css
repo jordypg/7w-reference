@@ -1,0 +1,775 @@
+/* ============================================================
+   7 Wonders Card Library
+   Pure HTML/CSS — all state via :checked, :has(), :target.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+:root {
+  /* ---- Fonts ---- */
+  --font-heading: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* ---- Surface ---- */
+  --bg:          #f5ecd6;
+  --bg-deep:     #ebdfbf;
+  --paper:       #fffaeb;
+  --paper-deep:  #f3e9c8;
+
+  /* ---- Ink ---- */
+  --ink:        #1f1410;
+  --ink-soft:   #4a3a2c;
+  --muted:      #8a7559;
+
+  /* ---- Accent ---- */
+  --accent:        #8b3a1c;
+  --accent-dark:   #5e2812;
+  --accent-soft:   rgba(139, 58, 28, 0.10);
+  --accent-border: rgba(139, 58, 28, 0.55);
+
+  /* ---- Card tile palette ---- */
+  --tile-brown:  #c08858;
+  --tile-grey:   #aeb3b5;
+  --tile-blue:   #7aa3c8;
+  --tile-red:    #cf7a70;
+  --tile-yellow: #e3bb50;
+  --tile-green:  #7fb381;
+  --tile-purple: #ad85c0;
+
+  /* ---- Borders ---- */
+  --border-subtle: rgba(31, 20, 16, 0.10);
+  --border-medium: rgba(31, 20, 16, 0.20);
+
+  /* ---- Radii ---- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+
+  /* ---- Shadows ---- */
+  --sh-sm:    0 1px 2px rgba(31,20,16,0.10), 0 2px 6px rgba(31,20,16,0.08);
+  --sh-md:    0 2px 6px rgba(31,20,16,0.12), 0 8px 20px rgba(31,20,16,0.12);
+  --sh-lg:    0 4px 12px rgba(31,20,16,0.18), 0 18px 40px rgba(31,20,16,0.35);
+  --sh-inset: inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--ink);
+  -webkit-tap-highlight-color: transparent;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.state {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+
+/* ============================================================
+   SCREEN 1 — PLAYER SELECT
+   ============================================================ */
+
+.player-select {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.player-select h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 9vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  margin: 0;
+  text-shadow: 0 2px 0 rgba(255,255,255,0.45);
+}
+
+.player-select .subtitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 2.5rem;
+  padding-left: 0.35em;
+}
+
+.player-select .subtitle::before,
+.player-select .subtitle::after {
+  content: '';
+  display: inline-block;
+  width: 1.75rem;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+
+.player-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.85rem;
+  width: 100%;
+  max-width: 340px;
+}
+
+.player-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  font-family: var(--font-heading);
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  border: 2px solid var(--accent);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-sm);
+  cursor: pointer;
+  user-select: none;
+}
+
+body:has(input[name="players"]:checked) .player-select { display: none; }
+
+
+/* ============================================================
+   SCREEN 2 — MAIN VIEW
+   ============================================================ */
+
+.main-view {
+  display: none;
+  min-height: 100vh;
+  padding-bottom: 3rem;
+}
+
+body:has(input[name="players"]:checked) .main-view { display: block; }
+
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 0.55rem;
+  padding: 0.7rem 0.8rem;
+  background: rgba(245, 236, 214, 0.92);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-bottom: 1px solid var(--border-subtle);
+  align-items: center;
+}
+
+/* ---- Shared paper-pill style for age cycler & view toggle ---- */
+.age-cycler,
+.view-toggle {
+  height: 2.75rem;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--r-sm);
+  box-shadow: var(--sh-sm);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ---- Age cycler ---- */
+.age-cycler {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.age-label {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+body:has(#a1:checked) .age-label-1 { display: flex; }
+body:has(#a2:checked) .age-label-2 { display: flex; }
+body:has(#a3:checked) .age-label-3 { display: flex; }
+
+/* ---- View toggle ---- */
+.view-toggle {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.view-toggle .when-cards  { display: inline; }
+.view-toggle .when-chains { display: none; }
+
+body:has(#view-chain:checked) .view-toggle .when-cards  { display: none; }
+body:has(#view-chain:checked) .view-toggle .when-chains { display: inline; }
+
+
+/* ============================================================
+   COLOR FILTER — bare colored square (no surrounding button)
+   ============================================================ */
+
+.color-button {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-button-swatch {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--accent);
+  background: #cdc3a8;
+}
+
+body:has(#c-brown:checked)  .color-button-swatch { background: var(--tile-brown); }
+body:has(#c-grey:checked)   .color-button-swatch { background: var(--tile-grey); }
+body:has(#c-blue:checked)   .color-button-swatch { background: var(--tile-blue); }
+body:has(#c-red:checked)    .color-button-swatch { background: var(--tile-red); }
+body:has(#c-yellow:checked) .color-button-swatch { background: var(--tile-yellow); }
+body:has(#c-green:checked)  .color-button-swatch { background: var(--tile-green); }
+body:has(#c-purple:checked) .color-button-swatch { background: var(--tile-purple); }
+
+/* Hide the color filter entirely in chain view */
+body:has(#view-chain:checked) .color-button,
+body:has(#view-chain:checked) .color-menu,
+body:has(#view-chain:checked) .color-menu-backdrop { display: none !important; }
+
+/* ---- Color menu overlay ---- */
+.color-menu-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,0.08);
+}
+
+.color-menu {
+  display: none;
+  position: fixed;
+  top: 4.25rem;
+  right: 0.8rem;
+  z-index: 60;
+  padding: 0.55rem;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--sh-lg);
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  max-width: 14rem;
+}
+
+body:has(#color-menu-toggle:checked) .color-menu          { display: flex; }
+body:has(#color-menu-toggle:checked) .color-menu-backdrop { display: block; }
+
+/* ---- Chip = colored square with a count number inside ---- */
+.color-chip {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--r-sm);
+  border: 1.5px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+  box-shadow: var(--sh-sm);
+}
+
+.chip-all    { background: #cdc3a8; }
+.chip-brown  { background: var(--tile-brown); }
+.chip-grey   { background: var(--tile-grey); }
+.chip-blue   { background: var(--tile-blue); }
+.chip-red    { background: var(--tile-red); }
+.chip-yellow { background: var(--tile-yellow); }
+.chip-green  { background: var(--tile-green); }
+.chip-purple { background: var(--tile-purple); }
+
+/* Selected chip — outline ring */
+body:has(#c-all:checked)    .chip-all,
+body:has(#c-brown:checked)  .chip-brown,
+body:has(#c-grey:checked)   .chip-grey,
+body:has(#c-blue:checked)   .chip-blue,
+body:has(#c-red:checked)    .chip-red,
+body:has(#c-yellow:checked) .chip-yellow,
+body:has(#c-green:checked)  .chip-green,
+body:has(#c-purple:checked) .chip-purple {
+  outline: 2.5px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Count = total cards (with copies) of that color at current age + player count */
+body:has(#a1:checked):has(#p3:checked) .color-chip[data-a1-p3]::after { content: attr(data-a1-p3); }
+body:has(#a1:checked):has(#p4:checked) .color-chip[data-a1-p4]::after { content: attr(data-a1-p4); }
+body:has(#a1:checked):has(#p5:checked) .color-chip[data-a1-p5]::after { content: attr(data-a1-p5); }
+body:has(#a1:checked):has(#p6:checked) .color-chip[data-a1-p6]::after { content: attr(data-a1-p6); }
+body:has(#a1:checked):has(#p7:checked) .color-chip[data-a1-p7]::after { content: attr(data-a1-p7); }
+body:has(#a2:checked):has(#p3:checked) .color-chip[data-a2-p3]::after { content: attr(data-a2-p3); }
+body:has(#a2:checked):has(#p4:checked) .color-chip[data-a2-p4]::after { content: attr(data-a2-p4); }
+body:has(#a2:checked):has(#p5:checked) .color-chip[data-a2-p5]::after { content: attr(data-a2-p5); }
+body:has(#a2:checked):has(#p6:checked) .color-chip[data-a2-p6]::after { content: attr(data-a2-p6); }
+body:has(#a2:checked):has(#p7:checked) .color-chip[data-a2-p7]::after { content: attr(data-a2-p7); }
+body:has(#a3:checked):has(#p3:checked) .color-chip[data-a3-p3]::after { content: attr(data-a3-p3); }
+body:has(#a3:checked):has(#p4:checked) .color-chip[data-a3-p4]::after { content: attr(data-a3-p4); }
+body:has(#a3:checked):has(#p5:checked) .color-chip[data-a3-p5]::after { content: attr(data-a3-p5); }
+body:has(#a3:checked):has(#p6:checked) .color-chip[data-a3-p6]::after { content: attr(data-a3-p6); }
+body:has(#a3:checked):has(#p7:checked) .color-chip[data-a3-p7]::after { content: attr(data-a3-p7); }
+
+/* Purple — only Age III, count = players + 2 */
+.chip-purple { display: none; }
+body:has(#a3:checked) .chip-purple { display: flex; }
+
+body:has(#a3:checked):has(#p3:checked) .chip-purple::after { content: "5"; }
+body:has(#a3:checked):has(#p4:checked) .chip-purple::after { content: "6"; }
+body:has(#a3:checked):has(#p5:checked) .chip-purple::after { content: "7"; }
+body:has(#a3:checked):has(#p6:checked) .chip-purple::after { content: "8"; }
+body:has(#a3:checked):has(#p7:checked) .chip-purple::after { content: "9"; }
+
+/* Hide a chip whose count is "0" at the current age + player count */
+body:has(#a1:checked):has(#p3:checked) .color-chip[data-a1-p3="0"],
+body:has(#a1:checked):has(#p4:checked) .color-chip[data-a1-p4="0"],
+body:has(#a1:checked):has(#p5:checked) .color-chip[data-a1-p5="0"],
+body:has(#a1:checked):has(#p6:checked) .color-chip[data-a1-p6="0"],
+body:has(#a1:checked):has(#p7:checked) .color-chip[data-a1-p7="0"],
+body:has(#a2:checked):has(#p3:checked) .color-chip[data-a2-p3="0"],
+body:has(#a2:checked):has(#p4:checked) .color-chip[data-a2-p4="0"],
+body:has(#a2:checked):has(#p5:checked) .color-chip[data-a2-p5="0"],
+body:has(#a2:checked):has(#p6:checked) .color-chip[data-a2-p6="0"],
+body:has(#a2:checked):has(#p7:checked) .color-chip[data-a2-p7="0"],
+body:has(#a3:checked):has(#p3:checked) .color-chip[data-a3-p3="0"],
+body:has(#a3:checked):has(#p4:checked) .color-chip[data-a3-p4="0"],
+body:has(#a3:checked):has(#p5:checked) .color-chip[data-a3-p5="0"],
+body:has(#a3:checked):has(#p6:checked) .color-chip[data-a3-p6="0"],
+body:has(#a3:checked):has(#p7:checked) .color-chip[data-a3-p7="0"] { display: none; }
+
+
+/* ============================================================
+   CARD GRID
+   ============================================================ */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  padding: 1rem 0.8rem 0;
+}
+
+.card {
+  position: relative;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  padding: 0.5rem 0.4rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  font-family: var(--font-body);
+  text-align: center;
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--sh-sm);
+}
+
+/* Card-name banner: small paper rectangle, uniform across all tiles */
+.card .card-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 1.4rem;
+  padding: 0 0.25rem;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 3px;
+  font-family: var(--font-heading);
+  font-size: 0.52rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+/* Card-icons wrapper: 1-4 icons inline, separated by " / ".
+   Icon size scales down by count via [data-icons]. */
+.card .card-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  gap: 0.2rem;
+}
+
+.card .card-icons[data-icons="1"] .icon { width: 2.5rem;  height: 2.5rem; }
+.card .card-icons[data-icons="2"] .icon { width: 1.7rem;  height: 1.7rem; }
+.card .card-icons[data-icons="3"] .icon { width: 1.3rem;  height: 1.3rem; }
+.card .card-icons[data-icons="4"] .icon { width: 1.05rem; height: 1.05rem; }
+
+/* Wide composite icons (e.g. yellow trade-post strip). viewBox 100x32, so
+   height drives size and width follows the intrinsic 3.125:1 aspect ratio. */
+.card .card-icons .icon.icon-wide  { width: auto; height: 1.5rem; max-width: 100%; }
+
+/* Stack composite icons (Age III yellow, guilds): viewBox 60x60 — overlap
+   layout. Square viewBox leaves room for the ▼ "your city" arrow below the card. */
+.card .card-icons .icon.icon-stack { width: auto; height: 3.2rem; max-width: 100%; }
+
+.icon-sep {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  user-select: none;
+  line-height: 1;
+}
+
+.card .card-icons .icon-sep { font-size: 0.8rem; }
+.card .card-icons[data-icons="4"] .icon-sep { font-size: 0.65rem; }
+
+.card-brown  { background: var(--tile-brown); }
+.card-grey   { background: var(--tile-grey); }
+.card-blue   { background: var(--tile-blue); }
+.card-red    { background: var(--tile-red); }
+.card-yellow { background: var(--tile-yellow); }
+.card-green  { background: var(--tile-green); }
+.card-purple { background: var(--tile-purple); }
+
+/* ---- Age filter ---- */
+body:has(#a1:checked) .card[data-age="1"] { display: flex; }
+body:has(#a2:checked) .card[data-age="2"] { display: flex; }
+body:has(#a3:checked) .card[data-age="3"] { display: flex; }
+
+/* ---- Player-count filter (applies in both views) ---- */
+body:has(#p3:checked) .card:not([data-players~="3"]) { display: none !important; }
+body:has(#p4:checked) .card:not([data-players~="4"]) { display: none !important; }
+body:has(#p5:checked) .card:not([data-players~="5"]) { display: none !important; }
+body:has(#p6:checked) .card:not([data-players~="6"]) { display: none !important; }
+body:has(#p7:checked) .card:not([data-players~="7"]) { display: none !important; }
+
+/* ---- Color filter — ONLY in cards view (not chain view) ---- */
+body:not(:has(#view-chain:checked)):has(#c-brown:checked)  .card:not(.card-brown)  { display: none !important; }
+body:not(:has(#view-chain:checked)):has(#c-grey:checked)   .card:not(.card-grey)   { display: none !important; }
+body:not(:has(#view-chain:checked)):has(#c-blue:checked)   .card:not(.card-blue)   { display: none !important; }
+body:not(:has(#view-chain:checked)):has(#c-red:checked)    .card:not(.card-red)    { display: none !important; }
+body:not(:has(#view-chain:checked)):has(#c-yellow:checked) .card:not(.card-yellow) { display: none !important; }
+body:not(:has(#view-chain:checked)):has(#c-green:checked)  .card:not(.card-green)  { display: none !important; }
+body:not(:has(#view-chain:checked)):has(#c-purple:checked) .card:not(.card-purple) { display: none !important; }
+
+
+/* ============================================================
+   CHAIN VIEW
+   ============================================================ */
+
+body:has(#view-chain:checked) .card.has-chains { display: flex; }
+body:has(#view-chain:checked) .card:not(.has-chains) { display: none !important; }
+
+body:has(#view-chain:checked) .card[data-age="1"] { grid-column: 1; }
+body:has(#view-chain:checked) .card[data-age="2"] { grid-column: 2; }
+body:has(#view-chain:checked) .card[data-age="3"] { grid-column: 3; }
+body:has(#view-chain:checked) .card { grid-row: var(--chain-row, auto); }
+
+body:has(#view-chain:checked) .card-grid {
+  column-gap: 1.5rem;
+  row-gap: 0.65rem;
+  padding: 1rem 1rem 0;
+}
+
+body:has(#view-chain:checked) .age-cycler { display: none; }
+
+
+/* ============================================================
+   CHAIN CONNECTORS
+   ============================================================ */
+
+.chain-connector {
+  display: none;
+  pointer-events: none;
+}
+
+body:has(#view-chain:checked) .chain-connector { display: block; z-index: 1; }
+body:has(#view-chain:checked) .card { z-index: 2; }
+
+.h-line {
+  align-self: center;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  opacity: 0.8;
+}
+
+.d-line,
+.d-line-up {
+  width: 100%;
+  height: 100%;
+}
+
+.d-line line,
+.d-line-up line {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.8;
+}
+
+
+/* ============================================================
+   FLOATING COUNT BADGE
+   ============================================================ */
+
+.count-badge {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.55rem;
+  height: 1.55rem;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+  border: 2px solid var(--paper);
+  color: white;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 2px 5px rgba(31, 20, 16, 0.4);
+  pointer-events: none;
+}
+
+body:has(#p3:checked) .count-badge::after { content: attr(data-c3); }
+body:has(#p4:checked) .count-badge::after { content: attr(data-c4); }
+body:has(#p5:checked) .count-badge::after { content: attr(data-c5); }
+body:has(#p6:checked) .count-badge::after { content: attr(data-c6); }
+body:has(#p7:checked) .count-badge::after { content: attr(data-c7); }
+
+body:has(#p3:checked) .count-badge[data-c3="0"],
+body:has(#p3:checked) .count-badge[data-c3="1"],
+body:has(#p4:checked) .count-badge[data-c4="0"],
+body:has(#p4:checked) .count-badge[data-c4="1"],
+body:has(#p5:checked) .count-badge[data-c5="0"],
+body:has(#p5:checked) .count-badge[data-c5="1"],
+body:has(#p6:checked) .count-badge[data-c6="0"],
+body:has(#p6:checked) .count-badge[data-c6="1"],
+body:has(#p7:checked) .count-badge[data-c7="0"],
+body:has(#p7:checked) .count-badge[data-c7="1"] { display: none; }
+
+
+/* ============================================================
+   ICONS — SVG `<svg class="icon"><use href="#icon-X"/></svg>`.
+   The SVG draws its own colored disc + emblem; the .icon class
+   just controls the rendered box size.
+   ============================================================ */
+
+.icon {
+  display: inline-block;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  vertical-align: middle;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25));
+}
+
+
+/* ============================================================
+   CARD DETAIL MODAL
+   ============================================================ */
+
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(31, 20, 16, 0.45);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
+body:has(.card-detail:target) .modal-backdrop { display: block; }
+
+.card-detail {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 13rem;
+  z-index: 100;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.card-detail:target { display: block; }
+
+.detail-row {
+  position: relative;
+  width: 100%;
+}
+
+.chain-side {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.chain-side:empty { display: none; }
+
+.chain-from { bottom: calc(100% + 1rem); }
+.chain-to   { top:    calc(100% + 1rem); }
+
+/* Larger chain mini-cards so longer titles fit comfortably */
+.chain-side a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5rem;
+  aspect-ratio: 3 / 4;
+  padding: 0.35rem;
+  border-radius: 7px;
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--sh-sm);
+  color: var(--ink);
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.15;
+  text-align: center;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+/* Main rectangular card face. Flex column: title banner up top,
+   cost flowing below it on the left, main icon centered in the
+   remaining space. */
+.card-face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  padding: 0.45rem;
+  gap: 0.45rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--sh-sm);
+}
+
+/* Title banner in normal flow, top */
+.card-face .card-title {
+  width: 100%;
+  margin: 0;
+  padding: 0.22rem 0.3rem;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 3px;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.18;
+  text-align: center;
+  color: var(--ink);
+}
+
+/* Cost flows below the title, anchored on the left */
+.card-face .cost {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+/* Collapse an empty cost so it doesn't introduce a gap */
+.card-face .cost:empty { display: none; }
+
+.card-face .cost .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Primary icon absolutely centered on the entire card, ignoring
+   the cost column. Supports 1-4 inline icons separated by " / ". */
+.card-face .main-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.card-face .main-icon[data-icons="1"] .icon { width: 3.75rem; height: 3.75rem; }
+.card-face .main-icon[data-icons="2"] .icon { width: 2.6rem;  height: 2.6rem; }
+.card-face .main-icon[data-icons="3"] .icon { width: 2.05rem; height: 2.05rem; }
+.card-face .main-icon[data-icons="4"] .icon { width: 1.65rem; height: 1.65rem; }
+
+/* Wide composite icons in the modal — keep viewBox 100x32 aspect. */
+.card-face .main-icon .icon.icon-wide  { width: auto; height: 2.4rem; max-width: 100%; }
+
+/* Stack composite icons in the modal — square viewBox 60x60 at full size. */
+.card-face .main-icon .icon.icon-stack { width: auto; height: 5rem;   max-width: 100%; }
+
+.card-face .main-icon .icon-sep { font-size: 1.4rem; font-weight: 600; }
+.card-face .main-icon[data-icons="3"] .icon-sep { font-size: 1.15rem; }
+.card-face .main-icon[data-icons="4"] .icon-sep { font-size: 0.95rem; }
